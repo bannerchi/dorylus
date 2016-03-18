@@ -126,4 +126,4 @@ Upon waking:
  - it re-sorts the array of entries by next activation time.
  - it goes to sleep until the soonest job.
 */
-package cron
+package antcron

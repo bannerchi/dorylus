@@ -1,22 +1,22 @@
 package jobs
 
 import (
-	"github.com/astaxie/beego"
-	"github.com/lisijie/cron"
+	"github.com/bannerchi/dorylus/antcron"
+	"log"
 	"sync"
 )
 
 var (
-	mainCron *cron.Cron
+	mainCron *antcron.Cron
 	workPool chan bool
 	lock     sync.Mutex
 )
 
 func init() {
-	if size, _ := beego.AppConfig.Int("jobs.pool"); size > 0 {
+	if size, _ := GetConfig().Int("WorkPollSize"); size > 0 {
 		workPool = make(chan bool, size)
 	}
-	mainCron = cron.New()
+	mainCron = antcron.New()
 	mainCron.Start()
 }
 
@@ -29,14 +29,14 @@ func AddJob(spec string, job *Job) bool {
 	}
 	err := mainCron.AddJob(spec, job)
 	if err != nil {
-		beego.Error("AddJob: ", err.Error())
+		log.Println("AddJob: ", err.Error())
 		return false
 	}
 	return true
 }
 
 func RemoveJob(id int) {
-	mainCron.RemoveJob(func(e *cron.Entry) bool {
+	mainCron.RemoveJob(func(e *antcron.Entry) bool {
 		if v, ok := e.Job.(*Job); ok {
 			if v.id == id {
 				return true
@@ -46,7 +46,7 @@ func RemoveJob(id int) {
 	})
 }
 
-func GetEntryById(id int) *cron.Entry {
+func GetEntryById(id int) *antcron.Entry {
 	entries := mainCron.Entries()
 	for _, e := range entries {
 		if v, ok := e.Job.(*Job); ok {
@@ -58,7 +58,7 @@ func GetEntryById(id int) *cron.Entry {
 	return nil
 }
 
-func GetEntries(size int) []*cron.Entry {
+func GetEntries(size int) []*antcron.Entry {
 	ret := mainCron.Entries()
 	if len(ret) > size {
 		return ret[:size]

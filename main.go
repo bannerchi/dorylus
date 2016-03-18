@@ -46,7 +46,6 @@ func (this *Callback) OnClose(c *tcp.Conn) {
 }
 
 func main() {
-	var err error
 	env := os.Getenv("DORYLUS_ENV")
 	if env == "dev" || env == "" {
 		env = "dev"

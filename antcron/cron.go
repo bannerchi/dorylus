@@ -1,6 +1,6 @@
 // This library implements a cron spec parser and runner.  See the README for
 // more details.
-package cron
+package antcron
 
 import (
 	"sort"

@@ -19,6 +19,12 @@ type Task struct {
 	CreateTime   int64
 }
 
+const (
+	TASK_SUCCESS = 0  // 任务执行成功
+	TASK_ERROR   = -1 // 任务执行出错
+	TASK_TIMEOUT = -2 // 任务执行超时
+)
+
 func (t *Task) TableName() string {
 	return TableName("task")
 }
