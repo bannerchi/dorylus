@@ -1,6 +1,7 @@
 package jobs
 
 import (
+	"fmt"
 	"github.com/bannerchi/dorylus/antcron"
 	"log"
 	"sync"
@@ -20,30 +21,33 @@ func init() {
 	mainCron.Start()
 }
 
-func AddJob(spec string, job *Job) bool {
+func AddJob(spec string, job *Job) string {
 	lock.Lock()
 	defer lock.Unlock()
 
 	if GetEntryById(job.id) != nil {
-		return false
+		return "job is already exsit"
 	}
 	err := mainCron.AddJob(spec, job)
 	if err != nil {
 		log.Println("AddJob: ", err.Error())
-		return false
+		return fmt.Sprintf("AddJob error: %s", err)
 	}
-	return true
+	return fmt.Sprintf("AddJob %s success", job.GetName())
 }
 
-func RemoveJob(id int) {
+func RemoveJob(id int) bool {
+	var isSuccess bool
 	mainCron.RemoveJob(func(e *antcron.Entry) bool {
 		if v, ok := e.Job.(*Job); ok {
 			if v.id == id {
+				isSuccess = true
 				return true
 			}
 		}
 		return false
 	})
+	return isSuccess
 }
 
 func GetEntryById(id int) *antcron.Entry {

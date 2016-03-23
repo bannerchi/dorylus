@@ -1,9 +1,8 @@
 package syslib
 
 import (
-	//"bytes"
-	//"errors"
-	//"fmt"
+	"fmt"
+	"github.com/bannerchi/dorylus/jobs"
 	"log"
 	"os/exec"
 	"strings"
@@ -33,6 +32,25 @@ func GetLoadAverage() string {
 	sys := newSysinfo("uptime")
 	result := sys.runCommand()
 	spliceRes := strings.Split(result.stdout, "load average:")
-	//fmt.Printf("%#v", spliceRes[1])
 	return spliceRes[1]
+}
+
+func GetProcStatusByPid(pid int) string {
+	sys := newSysinfo(fmt.Sprintf("cat /proc/%d/status", pid))
+	result := sys.runCommand()
+
+	return result.stdout
+}
+
+func RunTask(taskId int) string {
+	return jobs.InitOneJobByTaskId(taskId)
+}
+
+func RmTaskById(taskId int) string {
+	status := jobs.RemoveJob(taskId)
+	if status {
+		return "success"
+	} else {
+		return "faild"
+	}
 }

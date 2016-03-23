@@ -1,9 +1,15 @@
 package models
 
+import (
+	"errors"
+)
+
 type Task struct {
 	Id           int
 	UserId       int
 	GroupId      int
+	Pid          int
+	RunServer    string
 	TaskName     string
 	TaskType     int
 	Description  string
@@ -27,6 +33,30 @@ const (
 
 func (t *Task) TableName() string {
 	return TableName("task")
+}
+
+func GetTaskById(id int) (*Task, error) {
+	t := new(Task)
+	has, err := engine.Id(id).Get(t)
+	if err != nil {
+		return nil, err
+	} else if !has {
+		return nil, errors.New("Task does not exist")
+	}
+
+	return t, nil
+}
+
+func GetTaskByPid(pid int) (*Task, error) {
+	t := new(Task)
+	has, err := engine.Where("pid=?", pid).Get(t)
+	if err != nil {
+		return nil, err
+	} else if !has {
+		return nil, errors.New("Task does not exist")
+	}
+
+	return t, nil
 }
 
 func UpdateTask(id int, t *Task) error {

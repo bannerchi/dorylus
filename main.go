@@ -6,14 +6,16 @@ import (
 	"net"
 	"os"
 	"os/signal"
+	"regexp"
 	"runtime"
+	"strconv"
 	"syscall"
 	"time"
 
+	"github.com/astaxie/beego/config"
+	"github.com/bannerchi/dorylus/models"
 	"github.com/bannerchi/dorylus/syslib"
 	"github.com/bannerchi/dorylus/tcp"
-	//"github.com/bannerchi/dorylus/models"
-	"github.com/astaxie/beego/config"
 )
 
 type Callback struct{}
@@ -28,15 +30,48 @@ func (this *Callback) OnConnect(c *tcp.Conn) bool {
 func (this *Callback) OnMessage(c *tcp.Conn, p tcp.Packet) bool {
 	//check type
 	echoPacket := p.(*tcp.EchoPacket)
+	var resvMsg = new(tcp.EchoPacket)
 	req := string(echoPacket.GetBody())
 
-	var resvMsg = new(tcp.EchoPacket)
-	switch req {
-	case "get_load_average":
+	//get load average
+	regexpGetLoadAverage, _ := regexp.Compile("get_load_average")
+
+	//get proc status by pid
+	regexpGetProcStatus, _ := regexp.Compile(`^get_proc_status_-?\d+$`)
+
+	regexpGetNumber, _ := regexp.Compile(`-?\d+$`)
+
+	// run job from task
+	regexpRunJob, _ := regexp.Compile(`^run_task_-?\d+$`)
+
+	// remove job by taskid
+	regexpRmjob, _ := regexp.Compile(`^rm_task_-?\d+$`)
+
+	if regexpGetLoadAverage.MatchString(req) {
 		resvMsg = tcp.NewEchoPacket([]byte(syslib.GetLoadAverage()), false)
 	}
 
-	//fmt.Printf("OnMessage:[%v] [%v]\n", echoPacket.GetLength(), req)
+	if regexpGetProcStatus.MatchString(req) {
+		var pid int
+		strPid := regexpGetNumber.FindString(req)
+		pid, _ = strconv.Atoi(strPid)
+		resvMsg = tcp.NewEchoPacket([]byte(syslib.GetProcStatusByPid(pid)), false)
+	}
+
+	if regexpRunJob.MatchString(req) {
+		var taskId int
+		strTaskId := regexpGetNumber.FindString(req)
+		taskId, _ = strconv.Atoi(strTaskId)
+		resvMsg = tcp.NewEchoPacket([]byte(syslib.RunTask(taskId)), false)
+	}
+
+	if regexpRmjob.MatchString(req) {
+		var taskId int
+		strTaskId := regexpGetNumber.FindString(req)
+		taskId, _ = strconv.Atoi(strTaskId)
+		resvMsg = tcp.NewEchoPacket([]byte(syslib.RmTaskById(taskId)), false)
+	}
+
 	c.AsyncWritePacket(tcp.NewEchoPacket(resvMsg.Serialize(), true), time.Second)
 	return true
 }
@@ -57,29 +92,15 @@ func main() {
 	}
 
 	tcpPort := conf.String("tcp.port")
-	fmt.Println(tcpPort)
-	//models.Init()
 
-	// task_log := new(models.TaskLog)
-	// task_log.TaskId = 1
-	// task_log.ProcessTime = 20
-	// task_log.Output = "sas"
-	// task_log.CreateTime = time.Now().Unix()
-	// models.TaskLogAdd(task_log)
+	// init models
+	models.Init()
 
-	// task := new(models.Task)
-	// task.UserId = 212
-	// error := models.UpdateTask(2, task)
-	// if error != nil {
-	// 	fmt.Println(error)
-	// } else {
-	// 	fmt.Println("jobs done")
-	// }
-
+	//set cpus for max
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	// creates a tcp listener
-	tcpAddr, err := net.ResolveTCPAddr("tcp4", ":8989")
+	tcpAddr, err := net.ResolveTCPAddr("tcp4", tcpPort)
 	checkError(err)
 	listener, err := net.ListenTCP("tcp", tcpAddr)
 	checkError(err)
@@ -90,8 +111,6 @@ func main() {
 		PacketReceiveChanLimit: 20,
 	}
 	srv := tcp.NewServer(config, &Callback{}, &tcp.EchoProtocol{})
-
-	// status := syslib.GetLoadAverage()
 
 	// starts service
 	go srv.Start(listener, time.Second)

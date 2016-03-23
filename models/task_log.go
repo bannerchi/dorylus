@@ -3,6 +3,7 @@ package models
 type TaskLog struct {
 	Id          int
 	TaskId      int
+	Server      string
 	Output      string
 	Error       string
 	Status      int
