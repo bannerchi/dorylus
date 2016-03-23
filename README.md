@@ -9,6 +9,7 @@ A golang job server
 1. 2016-03-15 Alpha设计完毕
 2. 2016-03-18 worker框架代码提交
 3. 2016-03-23 woker 完善
+4. 2016-03-27 worker unit test
 
 
 # 基于的项目
