@@ -9,10 +9,10 @@ import (
 
 var engine *xorm.Engine
 
-func Init() {
+func Init(dbConf string) {
 	var err error
 	//TODO add config
-	engine, err = xorm.NewEngine("mysql", "root:556213@/webcron?charset=utf8")
+	engine, err = xorm.NewEngine("mysql", dbConf)
 
 	if err != nil {
 		log.Fatalf("Fail to create engine: %v\n", err)

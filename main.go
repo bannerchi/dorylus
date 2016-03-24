@@ -94,7 +94,7 @@ func main() {
 	tcpPort := conf.String("tcp.port")
 
 	// init models
-	models.Init()
+	models.Init(conf.String("mysql.conn"))
 
 	//set cpus for max
 	runtime.GOMAXPROCS(runtime.NumCPU())
