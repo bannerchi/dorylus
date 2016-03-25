@@ -23,12 +23,13 @@ type Task struct {
 	ExecuteTimes int
 	PrevTime     int64
 	CreateTime   int64
+	UpdatedAt    int64 `xorm:"updated"`
 }
 
 const (
-	TASK_SUCCESS = 0  // 任务执行成功
-	TASK_ERROR   = -1 // 任务执行出错
-	TASK_TIMEOUT = -2 // 任务执行超时
+	TASK_SUCCESS = 0
+	TASK_ERROR   = -1
+	TASK_TIMEOUT = -2
 )
 
 func (t *Task) TableName() string {
@@ -36,8 +37,9 @@ func (t *Task) TableName() string {
 }
 
 func GetTaskById(id int) (*Task, error) {
-	t := new(Task)
-	has, err := engine.Id(id).Get(t)
+	t := &Task{}
+	has, err := engine.Where("id=?", id).Get(t)
+
 	if err != nil {
 		return nil, err
 	} else if !has {
@@ -60,8 +62,15 @@ func GetTaskByPid(pid int) (*Task, error) {
 }
 
 func UpdateTask(id int, t *Task) error {
-	if _, err := engine.Id(id).Update(t); err != nil {
+	_, err := GetTaskById(id)
+	if err != nil {
 		return err
 	}
+	_, err2 := engine.Update(t)
+
+	if err2 != nil {
+		return err2
+	}
+
 	return nil
 }

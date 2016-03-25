@@ -1,11 +1,12 @@
 package syslib
 
 import (
-	"fmt"
-	"github.com/bannerchi/dorylus/jobs"
+	. "fmt"
 	"log"
 	"os/exec"
 	"strings"
+
+	"github.com/bannerchi/dorylus/jobs"
 )
 
 type Sysinfo struct {
@@ -36,7 +37,7 @@ func GetLoadAverage() string {
 }
 
 func GetProcStatusByPid(pid int) string {
-	sys := newSysinfo(fmt.Sprintf("cat /proc/%d/status", pid))
+	sys := newSysinfo(Sprintf("cat /proc/%d/status", pid))
 	result := sys.runCommand()
 
 	return result.stdout

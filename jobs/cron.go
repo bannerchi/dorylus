@@ -2,9 +2,11 @@ package jobs
 
 import (
 	"fmt"
-	"github.com/bannerchi/dorylus/antcron"
 	"log"
 	"sync"
+
+	"github.com/bannerchi/dorylus/antcron"
+	"github.com/bannerchi/dorylus/util"
 )
 
 var (
@@ -14,7 +16,7 @@ var (
 )
 
 func init() {
-	if size, _ := GetConfig().Int("WorkPollSize"); size > 0 {
+	if size, _ := util.GetConfig().Int("WorkPollSize"); size > 0 {
 		workPool = make(chan bool, size)
 	}
 	mainCron = antcron.New()

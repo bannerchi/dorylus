@@ -12,10 +12,10 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/astaxie/beego/config"
 	"github.com/bannerchi/dorylus/models"
 	"github.com/bannerchi/dorylus/syslib"
 	"github.com/bannerchi/dorylus/tcp"
+	"github.com/bannerchi/dorylus/util"
 )
 
 type Callback struct{}
@@ -81,20 +81,12 @@ func (this *Callback) OnClose(c *tcp.Conn) {
 }
 
 func main() {
-	env := os.Getenv("DORYLUS_ENV")
-	if env == "dev" || env == "" {
-		env = "dev"
-	}
-	conf, err := config.NewConfig("ini", "conf/"+env+".conf")
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	conf := util.GetConfig()
 
 	tcpPort := conf.String("tcp.port")
 
 	// init models
-	models.Init(conf.String("mysql.conn"))
+	models.Init()
 
 	//set cpus for max
 	runtime.GOMAXPROCS(runtime.NumCPU())

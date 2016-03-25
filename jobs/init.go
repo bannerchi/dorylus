@@ -1,11 +1,8 @@
 package jobs
 
 import (
-	//"fmt"
-	"github.com/astaxie/beego/config"
 	"log"
 	"net"
-	"os"
 	"os/exec"
 	"time"
 
@@ -25,18 +22,6 @@ func InitOneJobByTaskId(taskId int) string {
 	}
 
 	return AddJob(task.CronSpec, job)
-}
-
-func GetConfig() config.Configer {
-	env := os.Getenv("DORYLUS_ENV")
-	if env == "dev" || env == "" {
-		env = "dev"
-	}
-	conf, err := config.NewConfig("ini", "conf/"+env+".conf")
-	if err != nil {
-		log.Fatal("config error")
-	}
-	return conf
 }
 
 func GetLocalIp() string {
