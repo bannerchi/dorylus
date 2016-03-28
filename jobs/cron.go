@@ -6,7 +6,7 @@ import (
 	"sync"
 
 	"github.com/bannerchi/dorylus/antcron"
-	"github.com/bannerchi/dorylus/util"
+	Config "github.com/bannerchi/dorylus/util/config"
 )
 
 var (
@@ -16,7 +16,7 @@ var (
 )
 
 func init() {
-	if size, _ := util.GetConfig().Int("WorkPollSize"); size > 0 {
+	if size, _ := Config.GetConfig().Int("WorkPollSize"); size > 0 {
 		workPool = make(chan bool, size)
 	}
 	mainCron = antcron.New()

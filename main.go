@@ -6,16 +6,14 @@ import (
 	"net"
 	"os"
 	"os/signal"
-	"regexp"
 	"runtime"
-	"strconv"
 	"syscall"
 	"time"
 
 	"github.com/bannerchi/dorylus/models"
-	"github.com/bannerchi/dorylus/syslib"
 	"github.com/bannerchi/dorylus/tcp"
-	"github.com/bannerchi/dorylus/util"
+	Config "github.com/bannerchi/dorylus/util/config"
+	Filter "github.com/bannerchi/dorylus/util/filter"
 )
 
 type Callback struct{}
@@ -32,45 +30,9 @@ func (this *Callback) OnMessage(c *tcp.Conn, p tcp.Packet) bool {
 	echoPacket := p.(*tcp.EchoPacket)
 	var resvMsg = new(tcp.EchoPacket)
 	req := string(echoPacket.GetBody())
+	resv := Filter.ResponsFilter(req)
 
-	//get load average
-	regexpGetLoadAverage, _ := regexp.Compile("get_load_average")
-
-	//get proc status by pid
-	regexpGetProcStatus, _ := regexp.Compile(`^get_proc_status_-?\d+$`)
-
-	regexpGetNumber, _ := regexp.Compile(`-?\d+$`)
-
-	// run job from task
-	regexpRunJob, _ := regexp.Compile(`^run_task_-?\d+$`)
-
-	// remove job by taskid
-	regexpRmjob, _ := regexp.Compile(`^rm_task_-?\d+$`)
-
-	if regexpGetLoadAverage.MatchString(req) {
-		resvMsg = tcp.NewEchoPacket([]byte(syslib.GetLoadAverage()), false)
-	}
-
-	if regexpGetProcStatus.MatchString(req) {
-		var pid int
-		strPid := regexpGetNumber.FindString(req)
-		pid, _ = strconv.Atoi(strPid)
-		resvMsg = tcp.NewEchoPacket([]byte(syslib.GetProcStatusByPid(pid)), false)
-	}
-
-	if regexpRunJob.MatchString(req) {
-		var taskId int
-		strTaskId := regexpGetNumber.FindString(req)
-		taskId, _ = strconv.Atoi(strTaskId)
-		resvMsg = tcp.NewEchoPacket([]byte(syslib.RunTask(taskId)), false)
-	}
-
-	if regexpRmjob.MatchString(req) {
-		var taskId int
-		strTaskId := regexpGetNumber.FindString(req)
-		taskId, _ = strconv.Atoi(strTaskId)
-		resvMsg = tcp.NewEchoPacket([]byte(syslib.RmTaskById(taskId)), false)
-	}
+	resvMsg = tcp.NewEchoPacket(resv, false)
 
 	c.AsyncWritePacket(tcp.NewEchoPacket(resvMsg.Serialize(), true), time.Second)
 	return true
@@ -81,7 +43,7 @@ func (this *Callback) OnClose(c *tcp.Conn) {
 }
 
 func main() {
-	conf := util.GetConfig()
+	conf := Config.GetConfig()
 
 	tcpPort := conf.String("tcp.port")
 

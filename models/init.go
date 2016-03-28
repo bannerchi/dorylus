@@ -6,14 +6,14 @@ import (
 	"github.com/go-xorm/xorm"
 	"log"
 
-	"github.com/bannerchi/dorylus/util"
+	Config "github.com/bannerchi/dorylus/util/config"
 )
 
 var engine *xorm.Engine
 
 func Init() {
 	var err error
-	conf := util.GetConfig()
+	conf := Config.GetConfig()
 
 	engine, err = xorm.NewEngine("mysql", conf.String("mysql.conn"))
 
@@ -28,7 +28,7 @@ func Init() {
 }
 
 func TableName(name string) string {
-	conf := util.GetConfig()
+	conf := Config.GetConfig()
 	tablePrefix := conf.String("mysql.prefix")
 	return tablePrefix + name
 }

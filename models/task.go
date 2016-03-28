@@ -9,6 +9,7 @@ type Task struct {
 	UserId       int
 	GroupId      int
 	Pid          int
+	ServerId     int
 	RunServer    string
 	TaskName     string
 	TaskType     int

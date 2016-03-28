@@ -1,6 +1,7 @@
 package syslib
 
 import (
+	"encoding/json"
 	. "fmt"
 	"log"
 	"os/exec"
@@ -54,4 +55,11 @@ func RmTaskById(taskId int) string {
 	} else {
 		return "faild"
 	}
+}
+
+// get entries
+func GetReadToRunJobs(size int) []byte {
+	arrEntry := jobs.GetEntries(size)
+	jsonArrEntry, _ := json.Marshal(arrEntry)
+	return jsonArrEntry
 }
