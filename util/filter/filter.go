@@ -9,6 +9,7 @@ import (
 
 const (
 	LOAD_AVERAGE     = "get_load_average"
+	MEMORY           = "get_memory"
 	PROC_STATUS      = `^get_proc_status_-?\d+$`
 	NUMBER           = `-?\d+$`
 	RUN_JOB          = `^run_task_-?\d+$`
@@ -20,6 +21,9 @@ func ResponsFilter(req string) []byte {
 	var resvMsg []byte
 	//get load average
 	regexpGetLoadAverage, _ := regexp.Compile(LOAD_AVERAGE)
+
+	//get memory
+	regexpGetMemory, _ := regexp.Compile(MEMORY)
 
 	//get proc status by pid
 	regexpGetProcStatus, _ := regexp.Compile(PROC_STATUS)
@@ -36,14 +40,19 @@ func ResponsFilter(req string) []byte {
 	regexpGetReadToRunJobs, _ := regexp.Compile(READY_TO_RUN_JOB)
 
 	if regexpGetLoadAverage.MatchString(req) {
-		resvMsg = []byte(syslib.GetLoadAverage())
+		resvMsg = syslib.GetLoadAverage()
+	}
+
+	if regexpGetMemory.MatchString(req) {
+		resvMsg = syslib.GetMemory()
 	}
 
 	if regexpGetProcStatus.MatchString(req) {
-		var pid int
+		var pidi32 int32
 		strPid := regexpGetNumber.FindString(req)
-		pid, _ = strconv.Atoi(strPid)
-		resvMsg = []byte(syslib.GetProcStatusByPid(pid))
+		pid, _ := strconv.Atoi(strPid)
+		pidi32 = int32(pid)
+		resvMsg = []byte(syslib.GetProcStatusByPid(pidi32))
 	}
 
 	if regexpRunJob.MatchString(req) {

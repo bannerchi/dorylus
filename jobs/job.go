@@ -3,7 +3,6 @@ package jobs
 import (
 	"bytes"
 	"fmt"
-	//"html/template"
 	"github.com/bannerchi/dorylus/models"
 	"os/exec"
 	"runtime/debug"

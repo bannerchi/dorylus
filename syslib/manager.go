@@ -3,45 +3,47 @@ package syslib
 import (
 	"encoding/json"
 	. "fmt"
-	"log"
-	"os/exec"
-	"strings"
+	"time"
 
 	"github.com/bannerchi/dorylus/jobs"
+	mem "github.com/shirou/gopsutil/mem"
+	load "github.com/shirou/gopsutil/load"
+	proc "github.com/shirou/gopsutil/process"
 )
 
-type Sysinfo struct {
-	command string
-	stdout  string
+type ProcessState struct {
+	IsRunning     bool `json:"is_running"`
+	MemoryPercent float32 `json:"memory_percent"`
+	CpuPercent    float64 `json:"cpu_percent"`
 }
 
-func newSysinfo(comm string) *Sysinfo {
-	return &Sysinfo{
-		command: comm,
+func GetLoadAverage() []byte {
+	v, _ := load.LoadAvg()
+
+	jsonArr, _ := json.Marshal(v)
+	return jsonArr
+}
+/**
+	@return {"is_running":true,"memory_percent":2.2123966,"cpu_percent":0.999388968588172}
+ */
+func GetProcStatusByPid(pid int32) string {
+	if isExsit, _ := proc.PidExists(pid); isExsit == false {
+		return Sprintf("Process pid:%d is not exsit")
 	}
-}
+	processInfo := new(ProcessState)
+	process, _ := proc.NewProcess(pid)
 
-func (s *Sysinfo) runCommand() *Sysinfo {
-	out, err := exec.Command("/bin/bash", "-c", s.command).Output()
-	if err != nil {
-		log.Fatal(err)
-	}
-	s.stdout = string(out)
-	return s
-}
+	isRunning, _ := process.IsRunning()
+	memoryPercent, _ := process.MemoryPercent()
+	cpuPercent, _ := process.CPUPercent(1 * time.Second)
 
-func GetLoadAverage() string {
-	sys := newSysinfo("uptime")
-	result := sys.runCommand()
-	spliceRes := strings.Split(result.stdout, "load average:")
-	return spliceRes[1]
-}
+	processInfo.IsRunning = isRunning
+	processInfo.MemoryPercent = memoryPercent
+	processInfo.CpuPercent = cpuPercent
 
-func GetProcStatusByPid(pid int) string {
-	sys := newSysinfo(Sprintf("cat /proc/%d/status", pid))
-	result := sys.runCommand()
+	jsonArr, _ := json.Marshal(processInfo)
 
-	return result.stdout
+	return string(jsonArr)
 }
 
 func RunTask(taskId int) string {
@@ -55,6 +57,12 @@ func RmTaskById(taskId int) string {
 	} else {
 		return "faild"
 	}
+}
+
+func GetMemory() []byte {
+	v, _ := mem.VirtualMemory()
+	jsonArr, _ := json.Marshal(v)
+	return jsonArr
 }
 
 // get entries
