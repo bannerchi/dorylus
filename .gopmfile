@@ -1,0 +1,9 @@
+[deps]
+github.com/astaxie/beego = 
+github.com/go-sql-driver/mysql = 
+github.com/go-xorm/xorm = 
+github.com/shirou/gopsutil = 
+
+[res]
+include = conf
+
