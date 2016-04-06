@@ -1,5 +1,6 @@
 # dorylus
 A golang job server
+
 !["dorylus"](http://7xlu17.com1.z0.glb.clouddn.com/565ac46dd7a0b96e7c6f5336bcd98f72.jpg)
 #这是什么？
 
@@ -26,11 +27,16 @@ A golang job server
 修改conf/{环境}.conf,这里以开发环境dev为例
 
 数据库的链接配置：
+
 `mysql.conn = "{yourusername}:{youpassword}@/webcron?charset=utf8"`
 `mysql.prefix = "t_"`
+
 服务开启的端口：
+
 `tcp.port = ":8989"`
+
 最大运行进程数：
+
 `WorkPollSize = 10`
 
 
