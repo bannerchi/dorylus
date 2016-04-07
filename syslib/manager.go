@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/bannerchi/dorylus/jobs"
-	mem "github.com/shirou/gopsutil/mem"
-	load "github.com/shirou/gopsutil/load"
-	proc "github.com/shirou/gopsutil/process"
+	UtilMem "github.com/shirou/gopsutil/mem"
+	UtilLoad "github.com/shirou/gopsutil/load"
+	UtilProc "github.com/shirou/gopsutil/process"
 )
 
 type ProcessState struct {
@@ -18,7 +18,7 @@ type ProcessState struct {
 }
 
 func GetLoadAverage() []byte {
-	v, _ := load.LoadAvg()
+	v, _ := UtilLoad.LoadAvg()
 
 	jsonArr, _ := json.Marshal(v)
 	return jsonArr
@@ -27,11 +27,11 @@ func GetLoadAverage() []byte {
 	@return {"is_running":true,"memory_percent":2.2123966,"cpu_percent":0.999388968588172}
  */
 func GetProcStatusByPid(pid int32) string {
-	if isExsit, _ := proc.PidExists(pid); isExsit == false {
+	if isExsit, _ := UtilProc.PidExists(pid); isExsit == false {
 		return Sprintf("Process pid:%d is not exsit")
 	}
 	processInfo := new(ProcessState)
-	process, _ := proc.NewProcess(pid)
+	process, _ := UtilProc.NewProcess(pid)
 
 	isRunning, _ := process.IsRunning()
 	memoryPercent, _ := process.MemoryPercent()
@@ -60,7 +60,7 @@ func RmTaskById(taskId int) string {
 }
 
 func GetMemory() []byte {
-	v, _ := mem.VirtualMemory()
+	v, _ := UtilMem.VirtualMemory()
 	jsonArr, _ := json.Marshal(v)
 	return jsonArr
 }
