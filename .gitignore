@@ -23,5 +23,5 @@ _testmain.go
 *.exe
 *.test
 *.prof
-
+conf/dev.conf
 # Created by .ignore support plugin (hsz.mobi)

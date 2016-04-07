@@ -18,7 +18,7 @@ A golang job server
 
 确保依赖，首先下载无闻大大的[gopm](https://github.com/gpmgo/gopm)包，执行
 `gopm install`
-然后 `go run main.go`  就能运行了。
+然后 `gopm run main.go`  就能运行了。
 当然你可以build
 
 #使用说明
