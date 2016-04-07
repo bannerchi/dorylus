@@ -4,14 +4,12 @@ go:
   - 1.5
 
 install:
-  - go get github.com/smartystreets/goconvey/convey
   - go get github.com/astaxie/beego
   - go get github.com/go-sql-driver/mysql
   - go get github.com/go-xorm/xorm
-  - go get github.com/shirou/gopsutil/mem
-  - go get github.com/shirou/gopsutil/load
-  - go get github.com/shirou/gopsutil/process
+  - go get github.com/shirou/gopsutil
+  - go get github.com/smartystreets/goconvey/convey
 
-script: go test ./
+script: go test ./ ./syslib
 
 sudo: false

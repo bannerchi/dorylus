@@ -18,7 +18,7 @@ type ProcessState struct {
 }
 
 func GetLoadAverage() []byte {
-	v, _ := UtilLoad.LoadAvg()
+	v, _ := UtilLoad.Avg()
 
 	jsonArr, _ := json.Marshal(v)
 	return jsonArr
@@ -28,14 +28,14 @@ func GetLoadAverage() []byte {
  */
 func GetProcStatusByPid(pid int32) string {
 	if isExsit, _ := UtilProc.PidExists(pid); isExsit == false {
-		return Sprintf("Process pid:%d is not exsit")
+		return Sprintf("Process pid:%d is not exsit", pid)
 	}
 	processInfo := new(ProcessState)
 	process, _ := UtilProc.NewProcess(pid)
 
 	isRunning, _ := process.IsRunning()
 	memoryPercent, _ := process.MemoryPercent()
-	cpuPercent, _ := process.CPUPercent(1 * time.Second)
+	cpuPercent, _ := process.Percent(1 * time.Second)
 
 	processInfo.IsRunning = isRunning
 	processInfo.MemoryPercent = memoryPercent
