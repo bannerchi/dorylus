@@ -19,10 +19,10 @@ A golang job server
 
 #安装
 
-确保依赖，首先下载无闻大大的[gopm](https://github.com/gpmgo/gopm)包，执行
-`gopm install`
-然后 `gopm run main.go`  就能运行了。
-当然你可以build
+确保依赖，首先下载无闻大大的[gopm](https://github.com/gpmgo/gopm)包，执行 <br>
+`gopm install` <br>
+然后 `gopm run main.go`  就能运行了。<br>
+当然你也可以go build 生成执行文件 dorylus, 执行 ./dorylus ,<br>请确保你的配置文件已经配好。
 
 #使用说明
 
