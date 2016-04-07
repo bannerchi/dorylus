@@ -8,7 +8,9 @@ install:
   - go get github.com/astaxie/beego
   - go get github.com/go-sql-driver/mysql
   - go get github.com/go-xorm/xorm
-  - go get github.com/shirou/gopsutil
+  - go get github.com/shirou/gopsutil/mem
+  - go get github.com/shirou/gopsutil/load
+  - go get github.com/shirou/gopsutil/process
 
 script: go test ./
 
