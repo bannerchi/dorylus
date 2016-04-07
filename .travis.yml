@@ -10,6 +10,6 @@ install:
   - go get github.com/go-xorm/xorm
   - go get github.com/shirou/gopsutil
 
-script: go test ./ ./syslib
+script: go test ./
 
 sudo: false
