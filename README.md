@@ -47,11 +47,11 @@ A golang job server
 
 
 #进度
-1. 2016-03-15 Alpha设计完毕
-2. 2016-03-18 worker框架代码提交
-3. 2016-03-23 worker 完善
-4. 2016-03-27 worker unit test
-5. 2016-04-11 document
+- [x] 2016-03-15 Alpha设计完毕
+- [x] 2016-03-18 worker框架代码提交
+- [x] 2016-03-23 worker 完善
+- [x] 2016-03-27 worker unit test
+- [x] 2016-03-27 document
 
 
 # 基于的项目
