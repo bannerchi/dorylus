@@ -45,7 +45,9 @@ func GetProcStatusByPid(pid int32) string {
 
 	return string(jsonArr)
 }
-
+/**
+ return AddJob error: %s OR AddJob %s success
+ */
 func RunTask(taskId int) string {
 	return jobs.InitOneJobByTaskId(taskId)
 }

@@ -66,6 +66,9 @@ func GetEntryById(id int) *antcron.Entry {
 
 func GetEntries(size int) []*antcron.Entry {
 	ret := mainCron.Entries()
+	if size == 0 {
+		return ret
+	}
 	if len(ret) > size {
 		return ret[:size]
 	}
