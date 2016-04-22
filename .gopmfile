@@ -2,7 +2,7 @@
 github.com/astaxie/beego = 
 github.com/go-sql-driver/mysql = 
 github.com/go-xorm/xorm = 
-github.com/shirou/gopsutil = 
+github.com/shirou/gopsutil = branch:v2.0.0
 
 [res]
 include = conf
