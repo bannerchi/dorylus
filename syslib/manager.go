@@ -12,6 +12,7 @@ import (
 )
 
 type ProcessState struct {
+	Pid           int `json:"pid"`
 	IsRunning     bool `json:"is_running"`
 	MemoryPercent float32 `json:"memory_percent"`
 	CpuPercent    float64 `json:"cpu_percent"`
@@ -37,6 +38,7 @@ func GetProcStatusByPid(pid int32) string {
 	memoryPercent, _ := process.MemoryPercent()
 	cpuPercent, _ := process.Percent(1 * time.Second)
 
+	processInfo.Pid = pid
 	processInfo.IsRunning = isRunning
 	processInfo.MemoryPercent = memoryPercent
 	processInfo.CpuPercent = cpuPercent
