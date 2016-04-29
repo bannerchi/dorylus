@@ -12,7 +12,7 @@ import (
 )
 
 type ProcessState struct {
-	Pid           int `json:"pid"`
+	Pid           int32 `json:"pid"`
 	IsRunning     bool `json:"is_running"`
 	MemoryPercent float32 `json:"memory_percent"`
 	CpuPercent    float64 `json:"cpu_percent"`
