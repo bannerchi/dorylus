@@ -37,19 +37,19 @@ func AddJob(spec string, job *Job) string {
 	}
 	return fmt.Sprintf("AddJob %s success", job.GetName())
 }
-
+/**
+ TODO callback func can't change var
+ */
 func RemoveJob(id int) bool {
-	var isSuccess bool
 	mainCron.RemoveJob(func(e *antcron.Entry) bool {
 		if v, ok := e.Job.(*Job); ok {
 			if v.id == id {
-				isSuccess = true
 				return true
 			}
 		}
 		return false
 	})
-	return isSuccess
+	return true
 }
 
 func GetEntryById(id int) *antcron.Entry {
