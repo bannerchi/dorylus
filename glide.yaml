@@ -1,0 +1,16 @@
+package: github.com/bannerchi/dorylus
+import:
+- package: github.com/astaxie/beego
+  subpackages:
+  - config
+- package: github.com/go-sql-driver/mysql
+- package: github.com/go-xorm/xorm
+- package: github.com/shirou/gopsutil
+  subpackages:
+  - load
+  - mem
+  - process
+testImport:
+- package: github.com/smartystreets/goconvey
+  subpackages:
+  - convey
