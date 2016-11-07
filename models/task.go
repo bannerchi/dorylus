@@ -5,7 +5,7 @@ import (
 )
 
 type Task struct {
-	Id           int
+	Id           int `xorm:"pk"`
 	UserId       int
 	GroupId      int
 	Pid          int
@@ -63,14 +63,10 @@ func GetTaskByPid(pid int) (*Task, error) {
 }
 
 func UpdateTask(id int, t *Task) error {
-	_, err := GetTaskById(id)
+	_, err := engine.Id(id).Update(t)
+
 	if err != nil {
 		return err
-	}
-	_, err2 := engine.Update(t)
-
-	if err2 != nil {
-		return err2
 	}
 
 	return nil
