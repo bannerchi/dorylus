@@ -52,7 +52,7 @@ A golang job server
 - [x] 2016-03-23 worker 完善
 - [x] 2016-03-27 worker unit test
 - [x] 2016-04-07 document
-- [ ] 2016-04-15 联合测试 [dorylus-queen](https://github.com/bannerchi/dorylus-queen)
+- [x] 2016-11-07  [dorylus-cli](https://github.com/bannerchi/dorylus-cli)
 
 
 # 基于的项目
