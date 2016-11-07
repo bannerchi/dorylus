@@ -46,8 +46,9 @@ func NewCommandJob(id int, name string, command string) *Job {
 		cmd.Stderr = bufErr
 		cmd.Start()
 		job.task.Pid = cmd.Process.Pid
+		job.pid = cmd.Process.Pid
 		err, isTimeout := runCmdWithTimeout(cmd, timeout)
-
+		log.Printf("start %d ,pid: %d\n", job.id, job.pid)
 		return bufOut.String(), bufErr.String(), err, isTimeout
 	}
 
@@ -96,7 +97,6 @@ func (j *Job) Run() {
 		}()
 	}
 
-	log.Printf("开始执行任务: %d\n", j.id)
 	j.status++
 	defer func() {
 		j.status--
@@ -133,7 +133,8 @@ func (j *Job) Run() {
 
 	// update prev run time
 	j.task.PrevTime = t.Unix()
-	j.task.ExecuteTimes++
+	j.task.ExecuteTimes = j.task.ExecuteTimes + 1
 	j.task.RunServer = GetLocalIp()
+
 	models.UpdateTask(j.task.Id, j.task)
 }

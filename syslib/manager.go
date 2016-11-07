@@ -18,6 +18,13 @@ type ProcessState struct {
 	CpuPercent    float64 `json:"cpu_percent"`
 }
 
+type RetRunJob struct {
+	Tid 		int `json:"tid"`
+	Status 		int `json:"status"`
+	Name        string `json:"name"`
+	Pid 		int `json:"pid"`
+}
+
 func GetLoadAverage() []byte {
 	v, _ := UtilLoad.Avg()
 
@@ -31,6 +38,7 @@ func GetProcStatusByPid(pid int32) string {
 	if isExsit, _ := UtilProc.PidExists(pid); isExsit == false {
 		return Sprintf("Process pid:%d is not exsit", pid)
 	}
+
 	processInfo := new(ProcessState)
 	process, _ := UtilProc.NewProcess(pid)
 
@@ -72,6 +80,18 @@ func GetMemory() []byte {
 // get entries
 func GetReadToRunJobs(size int) []byte {
 	arrEntry := jobs.GetEntries(size)
-	jsonArrEntry, _ := json.Marshal(arrEntry)
+	arrRet := []*RetRunJob{}
+	for _, e := range arrEntry {
+		if v, ok := e.Job.(*jobs.Job); ok {
+			arrRet = append(arrRet, &RetRunJob{
+				Name: v.GetName(),
+				Tid: v.GetId(),
+				Status: v.Status(),
+				Pid: v.GetPid(),
+			})
+		}
+	}
+	jsonArrEntry, _ := json.Marshal(arrRet)
+
 	return jsonArrEntry
 }
