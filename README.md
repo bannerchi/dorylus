@@ -9,7 +9,7 @@ A golang job server
 
 这是一套分布式的cronjob 管理系统，支持manager机器基于负载和进程运行状态手动&自动调节分配运行的worker。
 
-#快速开始
+# 快速开始
 
 1. 先安装[gopm](https://github.com/gpmgo/gopm)
 2. `go get -u github.com/gpmgo/gopm`
@@ -17,16 +17,16 @@ A golang job server
 4. `gopm build`
 5. `./dorylus`
 
-#安装
+# 安装
 
 确保依赖，首先下载无闻大大的[gopm](https://github.com/gpmgo/gopm)包，执行 <br>
 `gopm install` <br>
 然后 `gopm run main.go`  就能运行了。<br>
 当然你也可以go build 生成执行文件 dorylus, 执行 ./dorylus ,<br>请确保你的配置文件已经配好。
 
-#使用说明
+# 使用说明
 
-##配置
+## 配置
 修改conf/{环境}.conf,这里以开发环境dev为例
 
 数据库的链接配置：
@@ -46,7 +46,7 @@ A golang job server
 这个只是一个worker，属于dorylus的执行者，管理者是另外的一个项目[dorylus-queen](https://github.com/bannerchi/dorylus-queen)。
 
 
-#进度
+# 进度
 - [x] 2016-03-15 Alpha设计完毕
 - [x] 2016-03-18 worker框架代码提交
 - [x] 2016-03-23 worker 完善
