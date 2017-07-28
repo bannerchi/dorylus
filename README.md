@@ -1,5 +1,4 @@
 # dorylus
-[![Build Status](https://travis-ci.org/bannerchi/dorylus.svg?branch=master)](https://travis-ci.org/bannerchi/dorylus)
 [![Build Status](https://circleci.com/gh/bannerchi/dorylus.png?circle-token=d5c4d4e8578ad9a4f56038e807b192fc7091adef)](https://circleci.com/gh/bannerchi/dorylus)
 
 A golang job server
