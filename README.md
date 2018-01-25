@@ -53,6 +53,9 @@ A golang job server
 - [x] 2016-03-27 worker unit test
 - [x] 2016-04-07 document
 - [x] 2016-11-07  [dorylus-cli](https://github.com/bannerchi/dorylus-cli)
+- [ ] worker 单例和并用模式切换（new）
+- [ ] 断线还原job进度（new）
+- [ ] job探针
 
 
 # 基于的项目
